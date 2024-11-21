@@ -2,7 +2,7 @@
 @extends('layouts.base')
 
 @section('content')
-
+@can('الصلاحيات')
 
     <section class="main-section users">
       <div class="container">
@@ -67,4 +67,5 @@
 </div>
       </div>
     </section>
+    @endcan
 @endsection

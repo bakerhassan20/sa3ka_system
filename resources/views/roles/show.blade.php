@@ -2,6 +2,7 @@
 @extends('layouts.base')
 
 @section('content')
+@can('الصلاحيات')
     <section class="main-section users">
       <div class="container">
         <h4 class="main-heading mt-5"> عرض صلاحيه</h4>
@@ -39,4 +40,5 @@
 </div>
       </div>
     </section>
+    @endcan
 @endsection

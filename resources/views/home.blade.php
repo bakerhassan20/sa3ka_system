@@ -20,7 +20,14 @@
                     @if(Auth::user()->entity_id == 10 || Auth::user()->entity_id == 16)
                        @php echo App\Models\Document::count(); @endphp
                     @else
-                    @php echo App\Models\Document::where('created_by',auth()->user()->id)->count(); @endphp
+                    @php
+                    $query = App\Models\Document::query();
+                    $doc =   $query->where(function ($q) {
+                            $q->where('documents.branch_id', auth()->user()->entity_id)
+                            ->orWhere('documents.entity_id', auth()->user()->entity_id);
+                        });
+
+                    echo $doc->count(); @endphp
                     @endif
                 </div>
               </div>

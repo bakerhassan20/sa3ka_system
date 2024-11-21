@@ -3,7 +3,7 @@
 
 @section('content')
 
-
+@can('الصلاحيات')
     <section class="main-section users">
       <div class="container">
       @if (count($errors) > 0)
@@ -63,4 +63,6 @@
 </div>
       </div>
     </section>
+
+    @endcan
 @endsection

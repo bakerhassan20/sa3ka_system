@@ -11,6 +11,7 @@ use App\Models\DocumentDetails;
 use Flasher\Prime\FlasherInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class DocumentController extends Controller
 {
@@ -83,7 +84,7 @@ class DocumentController extends Controller
     public function store(Request $request,FlasherInterface $flasher)
     {
 
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'photos.*' => 'required|mimes:jpg,jpeg,png,pdf,docx',
             'name' => 'required|string|max:255',
             'date' => 'required|date',
@@ -105,6 +106,13 @@ class DocumentController extends Controller
             'entity_id.required' => ' الجهه هو حقل مطلوب.',
         ]);
 
+
+        if ($validator->fails()) {
+            foreach ($validator->errors()->all() as $error) {
+                $flasher->addError($error);
+            }
+            return redirect()->route('document.create')->withInput();
+        }
 
         // Store the main document information
         $document = Document::create([
@@ -177,7 +185,7 @@ class DocumentController extends Controller
 
         public function update(Request $request, FlasherInterface $flasher, $id)
         {
-            $request->validate([
+            $validator = Validator::make($request->all(), [
                 'photos.*' => 'nullable|mimes:jpg,jpeg,png,pdf,docx|max:2048',
                 'name' => 'required|string|max:255',
                 'date' => 'required|date',
@@ -198,6 +206,14 @@ class DocumentController extends Controller
                 'type.required' => 'نوع الجهه هو حقل مطلوب.',
                 'entity_id.required' => ' الجهه هو حقل مطلوب.',
             ]);
+
+            if ($validator->fails()) {
+                foreach ($validator->errors()->all() as $error) {
+                    $flasher->addError($error);
+                }
+                return redirect()->route('document.edit', $id)->withInput();
+            }
+
 
             $document = Document::findOrFail($id);
 
